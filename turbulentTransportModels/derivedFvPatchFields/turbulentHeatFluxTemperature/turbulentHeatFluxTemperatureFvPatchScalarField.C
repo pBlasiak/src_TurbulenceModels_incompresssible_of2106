@@ -79,7 +79,10 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     heatSource_(hsPower),
     q_(p.size(), 0.0),
     alphaEffName_("undefinedAlphaEff")
-{}
+{
+
+	Info<< "AAAAAAAAAA" << endl;
+}
 
 
 turbulentHeatFluxTemperatureFvPatchScalarField::
@@ -95,7 +98,10 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     heatSource_(ptf.heatSource_),
     q_(ptf.q_, mapper),
     alphaEffName_(ptf.alphaEffName_)
-{}
+{
+
+	Info<< "BBBBBBBBBBBBBBBBBBBBBBBBBB" << endl;
+}
 
 
 turbulentHeatFluxTemperatureFvPatchScalarField::
@@ -106,7 +112,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     const dictionary& dict
 )
 :
-    uniformFixedGradientFvPatchScalarField(p, iF),
+    uniformFixedGradientFvPatchScalarField(p, iF, dict),
     heatSource_(heatSourceTypeNames_.read(dict.lookup("heatSource"))),
     q_("q", dict, p.size()),
     alphaEffName_(dict.lookup("alphaEff"))
@@ -121,6 +127,7 @@ turbulentHeatFluxTemperatureFvPatchScalarField
         fvPatchField<scalar>::operator=(patchInternalField());
         gradient() = 0.0;
     }
+	Info<< "GGGGGGGGGGGGGGGGGGGGGGGGGGG" << endl;
 }
 
 
@@ -134,7 +141,10 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     heatSource_(thftpsf.heatSource_),
     q_(thftpsf.q_),
     alphaEffName_(thftpsf.alphaEffName_)
-{}
+{
+
+	Info<< "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" << endl;
+}
 
 
 turbulentHeatFluxTemperatureFvPatchScalarField::
@@ -148,7 +158,10 @@ turbulentHeatFluxTemperatureFvPatchScalarField
     heatSource_(thftpsf.heatSource_),
     q_(thftpsf.q_),
     alphaEffName_(thftpsf.alphaEffName_)
-{}
+{
+
+	Info<< "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" << endl;
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -178,6 +191,7 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::rmap
         );
 
     q_.rmap(thftptf.q_, addr);
+	Info<< "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" << endl;
 }
 
 
@@ -264,6 +278,13 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     	}
 	}
 
+	// jak wywolana jest uniformFixedGradientFvPatchScalarField
+	// to zle wychodzi
+	// ogolnie powinno to dziedziczyc od fixedGradientFvPatchScalarField
+	// tak jak w atmTurbulentHeatFluxTemperatureFvPatchScalarField
+	// dziedziczenie od uniformFixedGradientFvPatchScalarField jest potrzebne
+	// dla BC zaleznych od czasu a jak na razie one dziedzicza od 
+	// turbulentHeatFluxTemperatureFvPatchScalarField
     fixedGradientFvPatchScalarField::updateCoeffs();
 }
 
