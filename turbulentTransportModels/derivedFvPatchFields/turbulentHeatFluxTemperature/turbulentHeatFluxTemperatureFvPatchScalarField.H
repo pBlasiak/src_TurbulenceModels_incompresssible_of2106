@@ -41,6 +41,7 @@ Description
         q               uniform 10;
         alphaEff        alphaEff;
         value           uniform 300; // place holder
+        uniformGradient uniform 300; // place holder
     }
     \endverbatim
 Note
