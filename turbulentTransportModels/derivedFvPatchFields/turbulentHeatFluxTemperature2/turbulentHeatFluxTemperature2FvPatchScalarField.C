@@ -235,18 +235,24 @@ void turbulentHeatFluxTemperature2FvPatchScalarField::updateCoeffs()
 			patch().lookupPatchField<volScalarField, scalar>("cp");
 		const scalarField& rho =
 			patch().lookupPatchField<volScalarField, scalar>("rho");
+		const scalarField& rhok =
+			patch().lookupPatchField<volScalarField, scalar>("rhok");
 
 		switch (heatSource_)
     	{
     	    case hsPower:
     	    {
     	        const scalar Ap = gSum(patch().magSf());
-    	        gradient() = q_/(Ap*rho*cp0*alphaEffp);
+    	        gradient() = q_/(Ap*(rho/rhok)*cp0*alphaEffp);
     	        break;
     	    }
     	    case hsFlux:
     	    {
-    	        gradient() = q_/(rho*cp0*alphaEffp);
+		//Info<< "alphaEff w BC = " << alphaEffp << endl;
+		//Info<< "rho w BC = " << rho << endl;
+		//Info<< "rhok w BC = " << rhok << endl;
+		//Info<< "cp w BC = " << cp0 << endl;
+    	        gradient() = q_/((rho/rhok)*cp0*alphaEffp);
     	        break;
     	    }
     	    default:
