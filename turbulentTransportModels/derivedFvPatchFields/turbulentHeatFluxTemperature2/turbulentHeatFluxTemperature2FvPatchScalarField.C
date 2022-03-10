@@ -191,8 +191,38 @@ void turbulentHeatFluxTemperature2FvPatchScalarField::updateCoeffs()
 
     const scalarField& alphaEffp =
         patch().lookupPatchField<volScalarField, scalar>(alphaEffName_);
-	
-	if (!db().foundObject<volScalarField>("cp"))
+
+	if(alphaEffName_ == "k")
+	{
+		switch (heatSource_)
+    	{
+    	    case hsPower:
+    	    {
+    	        const scalar Ap = gSum(patch().magSf());
+    	        gradient() = q_/(Ap*alphaEffp);
+    	        break;
+    	    }
+    	    case hsFlux:
+    	    {
+    	        gradient() = q_/alphaEffp;
+    	        break;
+    	    }
+    	    default:
+    	    {
+    	        FatalErrorIn
+    	        (
+    	            "turbulentHeatFluxTemperature2FvPatchScalarField"
+    	            "("
+    	                "const fvPatch&, "
+    	                "const DimensionedField<scalar, volMesh>&, "
+    	                "const dictionary&"
+    	            ")"
+    	        )   << "Unknown heat source type. Valid types are: "
+    	            << heatSourceTypeNames_ << nl << exit(FatalError);
+    	    }
+    	} 
+	}
+	else if (!db().foundObject<volScalarField>("cp"))
 	{
 		// retrieve (constant) specific heat capacity from transport dictionary
     	const IOdictionary& transportProperties =
@@ -226,8 +256,7 @@ void turbulentHeatFluxTemperature2FvPatchScalarField::updateCoeffs()
     	        )   << "Unknown heat source type. Valid types are: "
     	            << heatSourceTypeNames_ << nl << exit(FatalError);
     	    }
-    	}
-
+    	} 
 	}
 	else
 	{
