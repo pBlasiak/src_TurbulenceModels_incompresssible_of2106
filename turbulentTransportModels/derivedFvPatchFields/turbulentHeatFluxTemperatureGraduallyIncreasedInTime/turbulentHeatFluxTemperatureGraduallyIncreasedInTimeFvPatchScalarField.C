@@ -195,7 +195,10 @@ void turbulentHeatFluxTemperatureGraduallyIncreasedInTime::updateCoeffs()
         return;
     }
 
-	actualPowerOrHeatFluxIncreaseRatio_ += powerOrHeatFluxIncreaseRatio_;
+	if (actualPowerOrHeatFluxIncreaseRatio_ < 1.0)
+	{
+		actualPowerOrHeatFluxIncreaseRatio_ += powerOrHeatFluxIncreaseRatio_;
+	}
 
     const scalarField& alphaEffp =
         patch().lookupPatchField<volScalarField, scalar>(alphaEffName_);
