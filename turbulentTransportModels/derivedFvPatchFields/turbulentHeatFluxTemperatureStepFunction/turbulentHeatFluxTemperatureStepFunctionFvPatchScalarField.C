@@ -52,7 +52,8 @@ turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField
 )
 :
     turbulentHeatFluxTemperatureFvPatchScalarField(p, iF),
-	startTime_(0)
+	startTime_(0),
+	duration_(0)
 {}
 
 
@@ -66,7 +67,8 @@ turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField
 )
 :
     turbulentHeatFluxTemperatureFvPatchScalarField(ptf, p, iF, mapper),
-	startTime_(ptf.startTime_)
+	startTime_(ptf.startTime_),
+	duration_(ptf.duration_)
 {}
 
 
@@ -79,9 +81,11 @@ turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField
 )
 :
     turbulentHeatFluxTemperatureFvPatchScalarField(p, iF, dict),
-    startTime_(readScalar(dict.lookup("startTime")))
+    startTime_(readScalar(dict.lookup("startTime"))),
+    duration_(readScalar(dict.lookup("heatingDuration")))
 {
-	Info<< "\nStart time for heating is: t = " << startTime_ << " s\n" << endl;
+	Info<< "\nStart time for heating is: t = " << startTime_   << " s\n" << endl;
+	Info<< "\nDuration time of heating is: dt = " << duration_ << " s\n" << endl;
 }
 
 
@@ -92,7 +96,8 @@ turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField
 )
 :
     turbulentHeatFluxTemperatureFvPatchScalarField(thftpsf),
-    startTime_(thftpsf.startTime_)
+    startTime_(thftpsf.startTime_),
+    duration_(thftpsf.duration_)
 {}
 
 
@@ -104,7 +109,8 @@ turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField
 )
 :
     turbulentHeatFluxTemperatureFvPatchScalarField(thftpsf, iF),
-    startTime_(thftpsf.startTime_)
+    startTime_(thftpsf.startTime_),
+    duration_(thftpsf.duration_)
 {}
 
 
@@ -119,7 +125,7 @@ void turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField::updateCoeffs()
 
     const scalar t = this->db().time().timeOutputValue();
 	Info<< "\nt = " << t << " s\n" << endl;
-	if (t < startTime_)
+	if (t < startTime_ || t > (startTime_ + duration_))
 	{
 		gradient() = 0.0;
 		fixedGradientFvPatchScalarField::updateCoeffs();
@@ -136,6 +142,7 @@ void turbulentHeatFluxTemperatureStepFunctionFvPatchScalarField::write(Ostream& 
     turbulentHeatFluxTemperatureFvPatchScalarField::write(os);
     //writeEntry("startTime", os);
     os.writeKeyword("startTime") << startTime_ << token::END_STATEMENT << nl;
+    os.writeKeyword("heatingDuration") << duration_ << token::END_STATEMENT << nl;
 }
 
 

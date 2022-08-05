@@ -28,11 +28,12 @@ Description
 	a step jump.
     \heading Patch usage
     \table
-        Property     | Description             | Required    | Default value
-        heatSource   | heat source type: \c flux [W/m^2] or \c power [W]| yes |
-        q            | heat source value       | yes          |
-        alphaEff     | turbulent thermal diffusivity field name | yes |
-        startTime    | start time of heating   | yes |
+        Property     | Description                                       | Required  | Default value
+        heatSource   | heat source type: \c flux [W/m^2] or \c power [W] | yes       |
+        q            | heat source value                                 | yes       |
+        alphaEff     | turbulent thermal diffusivity field name          | yes       |
+        startTime    | start time of heating                             | yes       |
+        duration     | duration time of heating                          | yes       |
     \endtable
     Example of the boundary condition specification:
     \verbatim
@@ -44,6 +45,7 @@ Description
         alphaEff        alphaEff;
         value           uniform 300; // place holder
         startTime       5;
+        duration        1;
     }
     \endverbatim
 Note
@@ -87,6 +89,8 @@ private:
         //- Time that heat flux is applied
         scalar startTime_;
 
+        //- Duration of heating
+        scalar duration_;
 
 public:
 
