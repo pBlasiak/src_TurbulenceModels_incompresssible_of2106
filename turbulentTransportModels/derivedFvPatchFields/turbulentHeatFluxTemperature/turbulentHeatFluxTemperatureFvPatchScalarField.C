@@ -282,7 +282,6 @@ void turbulentHeatFluxTemperatureFvPatchScalarField::write(Ostream& os) const
         << token::END_STATEMENT << nl;
     q_.writeEntry("q", os);
     os.writeKeyword("alphaEff") << alphaEffName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
 }
 
 
